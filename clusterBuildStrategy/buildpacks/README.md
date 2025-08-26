@@ -12,11 +12,17 @@ This example uses the buildpacks strategy to build an image, and pushes the buil
 To use the extender, you set the cnb-extender-kind parameter in your Build resource. The following example assumes the OpenShift internal registry is enabled and the `BuildRun` executes in the `buildpacks-example` namespace:
 
 
+**Note:** Replace `[LANGUAGE]` with your target language for the samples repository:
+- For Go applications: use `go` (resulting in `source-subpath: "buildpack/go"` and `name: buildpack-golang-build`)
+- For Quarkus applications: use `quarkus` (resulting in `source-subpath: "buildpack/quarkus"` and `name: buildpack-quarkus-build`)
+
+For your own repositories, adjust the `source-subpath` value according to your repository structure where your application source code is located.
+
 ```yaml
 apiVersion: shipwright.io/v1beta1
 kind: Build
 metadata:
-  name: buildpack-quarkus-build
+  name: buildpack-[LANGUAGE]-build
 spec:
   source:
     type: Git
@@ -33,7 +39,7 @@ spec:
     - name: cnb-builder-image
       value: paketobuildpacks/builder-jammy-tiny:0.0.344
     - name: source-subpath
-      value: "buildpack/quarkus"
+      value: "buildpack/[LANGUAGE]"
   output:
     image: image-registry.openshift-image-registry.svc:5000/buildpacks-example/taxi-app
 ```
